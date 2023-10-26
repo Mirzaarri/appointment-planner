@@ -1,14 +1,18 @@
 import React from "react";
 
-export const ContactPicker = ({ contacts, onChange, value, name }) => {
+export const ContactPicker = ({ value, name, onChange, contacts }) => {
   return (
-    <select onChange={(e) => onChange(e.target.value)} value={value} name={name}>
-      <option value="">No Contact Selected</option>
-      {contacts.map((contact) => (
-        <option key={contact.name} value={contact.name}>
-          {contact.name}
-        </option>
-      ))}
+    <select aria-label="Contact Picker" value={value} name={name} onChange={onChange}>
+      <option value={""} key={-1}>
+        No Contact Selected
+      </option>
+      {contacts.map((contact) => {
+        return (
+          <option value={contact} key={contact}>
+            {contact}
+          </option>
+        );
+      })}
     </select>
   );
 };

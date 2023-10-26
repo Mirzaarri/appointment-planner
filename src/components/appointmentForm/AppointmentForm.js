@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useMemo } from "react";
+
 import { ContactPicker } from "../contactPicker/ContactPicker";
+
+const getTodayString = () => {
+  const [month, day, year] = new Date()
+    .toLocaleDateString("en-US")
+    .split("/");
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
 
 export const AppointmentForm = ({
   contacts,
-  title,
+  name,
   setTitle,
   contact,
   setContact,
@@ -13,52 +21,58 @@ export const AppointmentForm = ({
   setTime,
   handleSubmit
 }) => {
+
+  const contactNames = useMemo(() => {
+    return contacts.map((contact) => contact.name);
+  }, [contacts]);
+
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="title">Title:</label>
+      <label>
         <input
           type="text"
-          id="title"
-          value={title}
+          name="name"
+          value={name}
           onChange={(e) => setTitle(e.target.value)}
           required
+          placeholder="Appointment Name"
+          aria-label="Appointment Name"
         />
-      </div>
-
-      <div>
-        <label htmlFor="contact">Contact:</label>
-        {/* Render ContactPicker with contacts list */}
+      </label>
+      <br />
+      <label>
         <ContactPicker
-          contacts={contacts}
+          name="contact"
           value={contact}
-          onChange={(selectedContact) => setContact(selectedContact)}
+          contacts={contactNames}
+          onChange={(e) => setContact(e.target.value)}
         />
-      </div>
-
-      <div>
-        <label htmlFor="date">Date:</label>
+      </label>
+      <br />
+      <label>
         <input
           type="date"
-          id="date"
+          name="date"
+          min={getTodayString()}
           value={date}
           onChange={(e) => setDate(e.target.value)}
           required
+          aria-label="Date Picker"
         />
-      </div>
-
-      <div>
-        <label htmlFor="time">Time:</label>
+      </label>
+      <br />
+      <label>
         <input
           type="time"
-          id="time"
+          name="time"
           value={time}
           onChange={(e) => setTime(e.target.value)}
           required
+          aria-label="Time Picker"
         />
-      </div>
-
-      <button type="submit">Add Appointment</button>
+      </label>
+      <br />
+      <input aria-label="Add Appointment" type="submit" value="Add Appointment" />
     </form>
   );
 };
